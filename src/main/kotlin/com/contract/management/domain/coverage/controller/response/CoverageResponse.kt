@@ -1,6 +1,5 @@
 package com.contract.management.domain.coverage.controller.response
 
-import com.contract.management.domain.contractCoverage.entity.ContractCoverage
 import com.contract.management.domain.coverage.entity.Coverage
 import java.math.BigDecimal
 

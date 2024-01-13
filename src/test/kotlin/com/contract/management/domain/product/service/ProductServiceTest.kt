@@ -2,7 +2,6 @@ package com.contract.management.domain.product.service
 
 import com.contract.management.domain.product.controller.request.ProductSaveRequest
 import com.contract.management.domain.product.repository.ProductRepository
-import com.contract.management.factory.ProductFactory
 import com.contract.management.global.exception.BusinessException
 import com.contract.management.global.exception.ResponseCode
 import com.contract.management.template.IntegrationTestTemplate

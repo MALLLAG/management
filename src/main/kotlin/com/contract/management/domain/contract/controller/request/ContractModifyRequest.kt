@@ -1,7 +1,6 @@
 package com.contract.management.domain.contract.controller.request
 
 import jakarta.validation.constraints.NotBlank
-import java.time.LocalDate
 import java.time.YearMonth
 
 data class ContractModifyRequest(

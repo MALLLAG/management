@@ -1,11 +1,10 @@
 package com.contract.management.domain.coverage.entity
 
 import com.contract.management.factory.CoverageFactory
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.assertj.core.api.Assertions.assertThat
 import java.math.BigDecimal
-import java.time.YearMonth
 
 class CoverageTest {
 

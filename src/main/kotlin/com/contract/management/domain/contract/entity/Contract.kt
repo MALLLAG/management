@@ -7,7 +7,6 @@ import jakarta.persistence.*
 import org.hibernate.annotations.Comment
 import org.hibernate.annotations.Where
 import java.math.BigDecimal
-import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.ChronoUnit
 

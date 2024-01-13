@@ -1,6 +1,5 @@
 package com.contract.management.factory
 
-import com.contract.management.domain.product.controller.request.ProductSaveRequest
 import com.contract.management.domain.product.entity.Product
 
 class ProductFactory {

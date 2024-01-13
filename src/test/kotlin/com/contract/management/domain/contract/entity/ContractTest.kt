@@ -1,7 +1,6 @@
 package com.contract.management.domain.contract.entity
 
 import com.contract.management.factory.ContractFactory
-import org.junit.jupiter.api.Assertions.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

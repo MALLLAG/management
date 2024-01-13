@@ -2,7 +2,6 @@ package com.contract.management.domain.contract.service
 
 import com.contract.management.domain.contract.controller.request.ContractModifyRequest
 import com.contract.management.domain.contract.controller.request.ContractSaveRequest
-import com.contract.management.domain.contract.entity.Contract
 import com.contract.management.domain.contract.entity.enums.ContractStatus
 import com.contract.management.domain.contract.repository.ContractRepository
 import com.contract.management.domain.contractCoverage.repository.ContractCoverageRepository
@@ -11,7 +10,6 @@ import com.contract.management.domain.coverage.repository.CoverageRepository
 import com.contract.management.domain.coverage.service.CoverageService
 import com.contract.management.domain.product.entity.Product
 import com.contract.management.domain.product.repository.ProductRepository
-import com.contract.management.factory.ContractFactory
 import com.contract.management.factory.CoverageFactory
 import com.contract.management.factory.ProductFactory
 import com.contract.management.global.exception.BusinessException
@@ -24,7 +22,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
-import java.time.LocalDate
 import java.time.YearMonth
 
 class ContractServiceTest(

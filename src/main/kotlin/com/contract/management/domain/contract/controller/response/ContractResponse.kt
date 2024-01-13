@@ -1,7 +1,6 @@
 package com.contract.management.domain.contract.controller.response
 
 import com.contract.management.domain.coverage.controller.response.CoverageResponse
-import java.math.BigDecimal
 
 data class ContractResponse(
     val productName: String,
