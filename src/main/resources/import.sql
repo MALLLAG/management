@@ -1,0 +1,6 @@
+insert into product(name, contract_period_minimum, contract_period_maximum) values ('여행자 보험', 1, 3)
+insert into product(name, contract_period_minimum, contract_period_maximum) values ('휴대폰 보험', 1, 12)
+insert into coverage(product_id, name, insured_amount, base_amount) values (1, '상해치료비', 1000000, 100)
+insert into coverage(product_id, name, insured_amount, base_amount) values (1, '항공기 지연도착시 보상금', 500000, 100)
+insert into coverage(product_id, name, insured_amount, base_amount) values (2, '부분손실', 750000, 100)
+insert into coverage(product_id, name, insured_amount, base_amount) values (2, '전체손실', 1570000, 40)
