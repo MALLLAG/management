@@ -59,7 +59,6 @@ class ContractServiceTest(
             // given
             val saveRequest = ContractSaveRequest(
                 productId = product.id,
-                contractPeriod = 1,
                 insuranceStartDate = LocalDate.now(),
                 insuranceEndDate = LocalDate.now().plusMonths(1),
                 coverageIds = listOf(coverage1.id)
@@ -71,7 +70,7 @@ class ContractServiceTest(
 
             // then
             assertThat(product.name).isEqualTo(contractResponse.productName)
-            assertThat(saveRequest.contractPeriod).isEqualTo(contractResponse.contractPeriod)
+            assertThat(saveRequest.calculatePeriod()).isEqualTo(contractResponse.contractPeriod)
             assertThat(coverage1.name).isEqualTo(contractResponse.coverages[0].coverageName)
             assertThat(contractResponse.coverages[0].baseAmount).isNotNull
             assertThat(contractResponse.coverages[0].insuredAmount).isNotNull
@@ -86,7 +85,6 @@ class ContractServiceTest(
             // given
             val request = ContractSaveRequest(
                 productId = product.id,
-                contractPeriod = 1,
                 insuranceStartDate = LocalDate.now(),
                 insuranceEndDate = LocalDate.now().plusMonths(1),
                 coverageIds = listOf(coverage1.id)
@@ -104,7 +102,7 @@ class ContractServiceTest(
             }
 
             assertThat(request.productId).isEqualTo(contract.productId)
-            assertThat(request.contractPeriod).isEqualTo(contract.period)
+            assertThat(request.calculatePeriod()).isEqualTo(contract.calculatePeriod())
             assertThat(request.insuranceStartDate).isEqualTo(contract.insuranceStartDate)
             assertThat(request.insuranceEndDate).isEqualTo(contract.insuranceEndDate)
             assertThat(request.coverageIds).contains(coverages[0].id)
@@ -119,7 +117,6 @@ class ContractServiceTest(
             // given
             val saveRequest = ContractSaveRequest(
                 productId = product.id,
-                contractPeriod = 1,
                 insuranceStartDate = LocalDate.now(),
                 insuranceEndDate = LocalDate.now().plusMonths(1),
                 coverageIds = listOf(coverage1.id)
@@ -154,7 +151,6 @@ class ContractServiceTest(
             // given
             val saveRequest = ContractSaveRequest(
                 productId = product.id,
-                contractPeriod = 1,
                 insuranceStartDate = LocalDate.now(),
                 insuranceEndDate = LocalDate.now().plusMonths(1),
                 coverageIds = listOf(coverage1.id)
@@ -183,7 +179,6 @@ class ContractServiceTest(
             // given
             val saveRequest = ContractSaveRequest(
                 productId = product.id,
-                contractPeriod = 1,
                 insuranceStartDate = LocalDate.now(),
                 insuranceEndDate = LocalDate.now().plusMonths(1),
                 coverageIds = listOf(coverage1.id)
@@ -209,13 +204,11 @@ class ContractServiceTest(
     inner class `findExpiringContractsOneWeekBefore 함수는` {
 
         @Test
-        @Rollback(false)
         fun `계약 만기가 일주일 남은 계약들을 조회한다`() {
             // given
             val today = LocalDate.now()
             val saveRequest = ContractSaveRequest(
                 productId = product.id,
-                contractPeriod = 1,
                 insuranceStartDate = today.minusMonths(1).plusDays(7),
                 insuranceEndDate = today.plusDays(7),
                 coverageIds = listOf(coverage1.id)

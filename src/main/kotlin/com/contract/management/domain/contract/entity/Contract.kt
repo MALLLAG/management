@@ -23,10 +23,6 @@ class Contract(
     @Column(name = "product_id")
     var productId: Long,
 
-    @Comment("계약 기간")
-    @Column(name = "period")
-    var period: Int,
-
     @Comment("총 보험료")
     @Column(name = "total_amount", precision = 10, scale = 2)
     var totalAmount: BigDecimal,
@@ -51,7 +47,6 @@ class Contract(
             calculateAmount: BigDecimal
         ): Contract = Contract(
             productId = request.productId,
-            period = request.contractPeriod,
             totalAmount = calculateAmount,
             insuranceStartDate = request.insuranceStartDate,
             insuranceEndDate = request.insuranceEndDate,
@@ -61,7 +56,7 @@ class Contract(
 
     fun isExpired(): Boolean = this.status == ContractStatus.EXPIRED
 
-    fun calculatePeriod(): Int = (ChronoUnit.MONTHS.between(insuranceStartDate, insuranceEndDate) + 1).toInt()
+    fun calculatePeriod(): Int = (ChronoUnit.MONTHS.between(this.insuranceStartDate, this.insuranceEndDate) + 1).toInt()
 
     fun updateStatus(
         status: ContractStatus

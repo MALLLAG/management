@@ -42,7 +42,7 @@ class ContractService(
             .map { coverageRepository.findByIdOrNull(it.coverageId) ?: throw BusinessException(ResponseCode.NOT_FOUND_COVERAGE) }
             .map { CoverageResponse.from(it) }
 
-        return ContractResponse.of(product.name, contract.period, coverageResponses)
+        return ContractResponse.of(product.name, contract.calculatePeriod(), coverageResponses)
     }
 
     @Transactional(readOnly = true)
@@ -59,7 +59,7 @@ class ContractService(
     fun saveContract(
         request: ContractSaveRequest
     ): Long {
-        val calculateAmount = coverageService.calculateAmount(request.productId, request.contractPeriod, request.coverageIds)
+        val calculateAmount = coverageService.calculateAmount(request.productId, request.calculatePeriod(), request.coverageIds)
         val contract = contractRepository.save(Contract.of(request, calculateAmount))
         val contractCoverages = request.coverageIds.map { ContractCoverage.of(contract.id, it) }
         contractCoverageRepository.saveAll(contractCoverages)

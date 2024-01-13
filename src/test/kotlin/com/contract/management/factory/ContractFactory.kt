@@ -12,7 +12,6 @@ class ContractFactory {
             productId: Long
         ): Contract = Contract(
             productId = productId,
-            period = 12,
             totalAmount = BigDecimal("1000000"),
             insuranceStartDate = LocalDate.of(2023, 10, 1),
             insuranceEndDate = LocalDate.of(2024, 6, 1),
