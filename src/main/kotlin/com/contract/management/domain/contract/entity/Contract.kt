@@ -7,7 +7,7 @@ import jakarta.persistence.*
 import org.hibernate.annotations.Comment
 import org.hibernate.annotations.Where
 import java.math.BigDecimal
-import java.time.YearMonth
+import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 @Entity
@@ -33,11 +33,11 @@ class Contract(
 
     @Comment("보험 시작일")
     @Column(name = "insurance_start_date")
-    var insuranceStartDate: YearMonth,
+    var insuranceStartDate: LocalDate,
 
     @Comment("보험 종료일")
     @Column(name = "insurance_end_date")
-    var insuranceEndDate: YearMonth,
+    var insuranceEndDate: LocalDate,
 
     @Comment("계약 상태")
     @Enumerated(EnumType.STRING)
@@ -70,7 +70,7 @@ class Contract(
     }
 
     fun updateInsuranceEndDate(
-        insuranceEndDate: YearMonth
+        insuranceEndDate: LocalDate
     ) {
         this.insuranceEndDate = insuranceEndDate
     }

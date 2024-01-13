@@ -1,11 +1,11 @@
 package com.contract.management.domain.contract.controller.request
 
-import java.time.YearMonth
+import java.time.LocalDate
 
 data class ContractSaveRequest(
     val productId: Long,
     val contractPeriod: Int,
-    val insuranceStartDate: YearMonth,
-    val insuranceEndDate: YearMonth,
+    val insuranceStartDate: LocalDate,
+    val insuranceEndDate: LocalDate,
     val coverageIds: List<Long>
 )

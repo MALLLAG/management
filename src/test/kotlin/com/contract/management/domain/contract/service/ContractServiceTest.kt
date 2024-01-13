@@ -22,7 +22,9 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
-import java.time.YearMonth
+import org.springframework.test.annotation.Rollback
+import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 
 class ContractServiceTest(
     @Autowired private val contractService: ContractService,
@@ -58,8 +60,8 @@ class ContractServiceTest(
             val saveRequest = ContractSaveRequest(
                 productId = product.id,
                 contractPeriod = 1,
-                insuranceStartDate = YearMonth.now(),
-                insuranceEndDate = YearMonth.now().plusMonths(1),
+                insuranceStartDate = LocalDate.now(),
+                insuranceEndDate = LocalDate.now().plusMonths(1),
                 coverageIds = listOf(coverage1.id)
             )
             val contractId = contractService.saveContract(saveRequest)
@@ -85,8 +87,8 @@ class ContractServiceTest(
             val request = ContractSaveRequest(
                 productId = product.id,
                 contractPeriod = 1,
-                insuranceStartDate = YearMonth.now(),
-                insuranceEndDate = YearMonth.now().plusMonths(1),
+                insuranceStartDate = LocalDate.now(),
+                insuranceEndDate = LocalDate.now().plusMonths(1),
                 coverageIds = listOf(coverage1.id)
             )
 
@@ -118,8 +120,8 @@ class ContractServiceTest(
             val saveRequest = ContractSaveRequest(
                 productId = product.id,
                 contractPeriod = 1,
-                insuranceStartDate = YearMonth.now(),
-                insuranceEndDate = YearMonth.now().plusMonths(1),
+                insuranceStartDate = LocalDate.now(),
+                insuranceEndDate = LocalDate.now().plusMonths(1),
                 coverageIds = listOf(coverage1.id)
             )
             val contractId = contractService.saveContract(saveRequest)
@@ -128,7 +130,7 @@ class ContractServiceTest(
                 contractId = contractId,
                 addCoverageIds = listOf(coverage2.id),
                 deleteCoverageIds = listOf(coverage1.id),
-                insuranceEndDate = YearMonth.of(2024, 4),
+                insuranceEndDate = LocalDate.of(2024, 4, 1),
                 contractStatus = ContractStatus.WITHDRAW.toString()
             )
 
@@ -153,8 +155,8 @@ class ContractServiceTest(
             val saveRequest = ContractSaveRequest(
                 productId = product.id,
                 contractPeriod = 1,
-                insuranceStartDate = YearMonth.now(),
-                insuranceEndDate = YearMonth.now().plusMonths(1),
+                insuranceStartDate = LocalDate.now(),
+                insuranceEndDate = LocalDate.now().plusMonths(1),
                 coverageIds = listOf(coverage1.id)
             )
             val contractId = contractService.saveContract(saveRequest)
@@ -163,7 +165,7 @@ class ContractServiceTest(
                 contractId = contractId,
                 addCoverageIds = listOf(coverage2.id),
                 deleteCoverageIds = listOf(coverage1.id),
-                insuranceEndDate = YearMonth.of(2024, 4),
+                insuranceEndDate = LocalDate.of(2024, 4, 1),
                 contractStatus = ContractStatus.WITHDRAW.toString()
             )
 
@@ -182,8 +184,8 @@ class ContractServiceTest(
             val saveRequest = ContractSaveRequest(
                 productId = product.id,
                 contractPeriod = 1,
-                insuranceStartDate = YearMonth.now(),
-                insuranceEndDate = YearMonth.now().plusMonths(1),
+                insuranceStartDate = LocalDate.now(),
+                insuranceEndDate = LocalDate.now().plusMonths(1),
                 coverageIds = listOf(coverage1.id)
             )
             val contractId = contractService.saveContract(saveRequest)
@@ -192,7 +194,7 @@ class ContractServiceTest(
                 contractId = contractId,
                 addCoverageIds = listOf(coverage2.id),
                 deleteCoverageIds = listOf(coverage1.id),
-                insuranceEndDate = YearMonth.now().minusMonths(2),
+                insuranceEndDate = LocalDate.now().minusMonths(2),
                 contractStatus = ContractStatus.WITHDRAW.toString()
             )
 
@@ -200,6 +202,31 @@ class ContractServiceTest(
             assertThatThrownBy { contractService.modifyContract(modifyRequest) }
                 .isExactlyInstanceOf(BusinessException::class.java)
                 .hasMessage(ResponseCode.INVALID_INSURANCE_END_DATE.message)
+        }
+    }
+
+    @Nested
+    inner class `findExpiringContractsOneWeekBefore 함수는` {
+
+        @Test
+        @Rollback(false)
+        fun `계약 만기가 일주일 남은 계약들을 조회한다`() {
+            // given
+            val today = LocalDate.now()
+            val saveRequest = ContractSaveRequest(
+                productId = product.id,
+                contractPeriod = 1,
+                insuranceStartDate = today.minusMonths(1).plusDays(7),
+                insuranceEndDate = today.plusDays(7),
+                coverageIds = listOf(coverage1.id)
+            )
+            contractService.saveContract(saveRequest)
+
+            // when
+            val contracts = contractService.findExpiringContractsOneWeekBefore()
+
+            // then
+            assertThat(contracts[0].insuranceEndDate).isEqualTo(today.plusDays(7))
         }
     }
 

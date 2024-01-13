@@ -3,7 +3,7 @@ package com.contract.management.factory
 import com.contract.management.domain.contract.entity.Contract
 import com.contract.management.domain.contract.entity.enums.ContractStatus
 import java.math.BigDecimal
-import java.time.YearMonth
+import java.time.LocalDate
 
 class ContractFactory {
 
@@ -14,8 +14,8 @@ class ContractFactory {
             productId = productId,
             period = 12,
             totalAmount = BigDecimal("1000000"),
-            insuranceStartDate = YearMonth.of(2023, 10),
-            insuranceEndDate = YearMonth.of(2024, 6),
+            insuranceStartDate = LocalDate.of(2023, 10, 1),
+            insuranceEndDate = LocalDate.of(2024, 6, 1),
             status = ContractStatus.NORMAL
         )
     }

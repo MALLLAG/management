@@ -19,7 +19,7 @@ import com.contract.management.global.exception.ResponseCode
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.YearMonth
+import java.time.LocalDate
 
 @Service
 @Transactional
@@ -93,7 +93,7 @@ class ContractService(
         request: ContractModifyRequest,
         contract: Contract
     ) {
-        if (request.insuranceEndDate <= YearMonth.now()) {
+        if (request.insuranceEndDate <= LocalDate.now()) {
             throw BusinessException(ResponseCode.INVALID_INSURANCE_END_DATE)
         }
 
@@ -119,5 +119,7 @@ class ContractService(
 
         contract.updateTotalAmount(calculateAmount)
     }
+
+    fun findExpiringContractsOneWeekBefore(): List<Contract> = contractRepository.findExpiringContractsOneWeekBefore()
 
 }
