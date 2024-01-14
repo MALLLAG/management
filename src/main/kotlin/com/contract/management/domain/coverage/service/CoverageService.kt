@@ -50,7 +50,15 @@ class CoverageService(
         coverageIds: List<Long>,
         productId: Long
     ) {
+        if (coverageIds.isEmpty()) {
+            return
+        }
+
         val coverages = coverageRepository.findAllById(coverageIds)
+
+        if (coverages.isEmpty()) {
+            throw BusinessException(ResponseCode.NOT_FOUND_COVERAGE)
+        }
 
         if (!coverages.isIncludedInProduct(productId)) {
             throw BusinessException(ResponseCode.NOT_INCLUDED_IN_PRODUCT)

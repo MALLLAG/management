@@ -3,6 +3,8 @@ package com.contract.management.domain.contractCoverage.service
 import com.contract.management.domain.contractCoverage.entity.ContractCoverage
 import com.contract.management.domain.contractCoverage.repository.ContractCoverageRepository
 import com.contract.management.domain.coverage.service.CoverageService
+import com.contract.management.global.exception.BusinessException
+import com.contract.management.global.exception.ResponseCode
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -18,6 +20,7 @@ class ContractCoverageService(
         contractId: Long,
         productId: Long
     ) {
+        validateDuplicateContractCoverage(addCoverageIds, contractId)
         val addContractCoverages = addCoverageIds.map { ContractCoverage.of(contractId, it) }
         coverageService.validateIncludedInProduct(addCoverageIds, productId)
         contractCoverageRepository.saveAll(addContractCoverages)
@@ -28,9 +31,27 @@ class ContractCoverageService(
         contractId: Long,
         productId: Long
     ) {
-        val contractCoverages = contractCoverageRepository.findByContractId(contractId)
+        val deleteContractCoverages = contractCoverageRepository.findByContractId(contractId)
         coverageService.validateIncludedInProduct(deleteCoverageIds, productId)
-        contractCoverages.filter { deleteCoverageIds.contains(it.coverageId) }
+        deleteContractCoverages.filter { deleteCoverageIds.contains(it.coverageId) }
             .forEach { it.delete() }
+    }
+
+    private fun validateDuplicateContractCoverage(
+        coverageIds: List<Long>,
+        contractId: Long
+    ) {
+        if (coverageIds.any { isDuplicateContractCoverage(it, contractId) }) {
+            throw BusinessException(ResponseCode.DUPLICATE_CONTRACT_COVERAGE)
+        }
+    }
+
+    private fun isDuplicateContractCoverage(
+        coverageId: Long,
+        contractId: Long
+    ): Boolean {
+        val contractCoverage = contractCoverageRepository.findByContractIdAndCoverageId(contractId, coverageId)
+
+        return contractCoverage != null
     }
 }

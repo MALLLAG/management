@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface ContractCoverageRepository: JpaRepository<ContractCoverage, Long> {
     fun findByContractId(contractId: Long): List<ContractCoverage>
+    fun findByContractIdAndCoverageId(contractId: Long, coverageId: Long): ContractCoverage?
 }

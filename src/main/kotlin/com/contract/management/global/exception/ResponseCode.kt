@@ -11,6 +11,9 @@ enum class ResponseCode(
     ALREADY_EXPIRED("이미 만료된 계약입니다.", HttpStatus.BAD_REQUEST),
     INVALID_INSURANCE_END_DATE("해당 기간으로는 계약 기간 변경이 불가능합니다.", HttpStatus.BAD_REQUEST),
 
+    // contract coverage
+    DUPLICATE_CONTRACT_COVERAGE("이미 계약된 담보입니다.", HttpStatus.BAD_REQUEST),
+
     // coverage
     NOT_FOUND_COVERAGE("해당 담보 정보를 찾지 못했습니다.", HttpStatus.BAD_REQUEST),
     DUPLICATE_COVERAGE("이미 등록된 담보입니다.", HttpStatus.BAD_REQUEST),
