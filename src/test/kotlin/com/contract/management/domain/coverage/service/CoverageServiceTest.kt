@@ -1,9 +1,11 @@
 package com.contract.management.domain.coverage.service
 
 import com.contract.management.domain.coverage.controller.request.CoverageSaveRequest
+import com.contract.management.domain.coverage.entity.Coverage
 import com.contract.management.domain.coverage.repository.CoverageRepository
 import com.contract.management.domain.product.entity.Product
 import com.contract.management.domain.product.repository.ProductRepository
+import com.contract.management.factory.CoverageFactory
 import com.contract.management.factory.ProductFactory
 import com.contract.management.global.exception.BusinessException
 import com.contract.management.global.exception.ResponseCode
@@ -24,11 +26,19 @@ class CoverageServiceTest(
 ): IntegrationTestTemplate() {
 
     private lateinit var product: Product
+    private lateinit var coverage1: Coverage
+    private lateinit var coverage2: Coverage
 
     @BeforeEach
     fun setup() {
         product = ProductFactory.createProduct()
         productRepository.save(product)
+
+        coverage1 = CoverageFactory.createCoverage1(product.id)
+        coverageRepository.save(coverage1)
+
+        coverage2 = CoverageFactory.createCoverage1(product.id)
+        coverageRepository.save(coverage2)
     }
 
     @Nested
@@ -70,6 +80,22 @@ class CoverageServiceTest(
             assertThat(request.name).isEqualTo(coverage.name)
             assertThat(request.insuredAmount).isEqualTo(coverage.insuredAmount)
             assertThat(request.baseAmount).isEqualTo(coverage.baseAmount)
+        }
+    }
+
+    @Nested
+    inner class `validateIncludedInProduct 함수는` {
+
+        @Test
+        fun `담보가 해당 상품에 존재하지 않으면 예외를 던진다`() {
+            // given
+            val coverageIds = listOf(coverage1.id, coverage2.id)
+            val productId = Long.MAX_VALUE
+
+            // when & then
+            assertThatThrownBy { coverageService.validateIncludedInProduct(coverageIds, productId) }
+                .isExactlyInstanceOf(BusinessException::class.java)
+                .hasMessage(ResponseCode.NOT_INCLUDED_IN_PRODUCT.message)
         }
     }
 }
