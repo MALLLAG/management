@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 class ContractTest {
 
     @Nested
-    class `getPeriod 함수는` {
+    inner class `getPeriod 함수는` {
 
         @Test
         fun `보험 종료일과 보험 시작일으로 계약 기간을 계산하여 반환한다`() {

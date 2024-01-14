@@ -1,10 +1,8 @@
 package com.contract.management.domain.contract.scheduler
 
-import com.contract.management.domain.contract.repository.ContractRepository
 import com.contract.management.domain.contract.service.ContractService
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
-import java.time.LocalDate
 
 @Component
 class ContractScheduler(

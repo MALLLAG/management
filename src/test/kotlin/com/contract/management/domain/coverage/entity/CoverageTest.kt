@@ -9,7 +9,7 @@ import java.math.BigDecimal
 class CoverageTest {
 
     @Nested
-    class `coverage의 calculateAmount 함수는` {
+    inner class `coverage의 calculateAmount 함수는` {
 
         @Test
         fun `가입 기간을 받아, 총 보험료를 계산해 반환한다`() {
