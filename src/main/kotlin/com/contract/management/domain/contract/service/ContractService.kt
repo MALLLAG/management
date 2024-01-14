@@ -44,7 +44,7 @@ class ContractService(
             .map { coverageRepository.findByIdOrNull(it.coverageId) ?: throw BusinessException(ResponseCode.NOT_FOUND_COVERAGE) }
             .map { CoverageResponse.from(it) }
 
-        return ContractResponse.of(product.name, contract.calculatePeriod(), coverageResponses)
+        return ContractResponse.of(product.name, contract, coverageResponses)
     }
 
     @Transactional(readOnly = true)
