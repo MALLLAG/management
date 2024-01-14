@@ -238,7 +238,11 @@ contractId: 계약 번호
 ```json
 {
     "productName": "그냥 상품",
-    "contractPeriod": 2,
+    "contractPeriod": 5,
+    "totalAmount": 25000.00,
+    "insuranceStartDate": "2023-12-21",
+    "insuranceEndDate": "2024-04-21",
+    "contractStatus": "NORMAL",
     "coverages": [
         {
             "coverageName": "그냥 담보",
@@ -252,6 +256,10 @@ contractId: 계약 번호
 ```
 productName: 상품명
 contractPeriod: 계약기간
+totalAmount: 총 보험료
+insuranceStartDate: 계약 시작일
+insuranceEndDate: 계약 종료일
+contractStatus: 계약 상태
 coverageName: 담보명
 insuredAmount: 가입 금액
 baseAmount: 기준 금액
