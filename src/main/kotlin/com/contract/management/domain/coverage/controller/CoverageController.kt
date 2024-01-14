@@ -1,6 +1,7 @@
 package com.contract.management.domain.coverage.controller
 
 import com.contract.management.domain.coverage.controller.request.CoverageSaveRequest
+import com.contract.management.domain.coverage.controller.response.CoverageSaveResponse
 import com.contract.management.domain.coverage.service.CoverageService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -19,8 +20,7 @@ class CoverageController(
     @PostMapping
     fun saveCoverage(
         @Valid @RequestBody request: CoverageSaveRequest
-    ): ResponseEntity<Unit> {
-        coverageService.saveCoverage(request)
-        return ResponseEntity(HttpStatus.CREATED)
+    ): ResponseEntity<CoverageSaveResponse> {
+        return ResponseEntity(coverageService.saveCoverage(request), HttpStatus.CREATED)
     }
 }

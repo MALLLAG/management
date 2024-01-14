@@ -3,7 +3,9 @@ package com.contract.management.domain.contract.service
 import com.contract.management.domain.contract.controller.request.ContractModifyRequest
 import com.contract.management.domain.contract.controller.request.ContractSaveRequest
 import com.contract.management.domain.contract.controller.response.AmountEstimateResponse
+import com.contract.management.domain.contract.controller.response.ContractModifyResponse
 import com.contract.management.domain.contract.controller.response.ContractResponse
+import com.contract.management.domain.contract.controller.response.ContractSaveResponse
 import com.contract.management.domain.contract.entity.Contract
 import com.contract.management.domain.contract.entity.enums.ContractStatus
 import com.contract.management.domain.contract.repository.ContractRepository
@@ -58,18 +60,18 @@ class ContractService(
 
     fun saveContract(
         request: ContractSaveRequest
-    ): Long {
+    ): ContractSaveResponse {
         val calculateAmount = coverageService.calculateAmount(request.productId, request.calculatePeriod(), request.coverageIds)
         val contract = contractRepository.save(Contract.of(request, calculateAmount))
         val contractCoverages = request.coverageIds.map { ContractCoverage.of(contract.id, it) }
         contractCoverageRepository.saveAll(contractCoverages)
 
-        return contract.id
+        return ContractSaveResponse.from(contract.id)
     }
 
     fun modifyContract(
         request: ContractModifyRequest
-    ): Long {
+    ): ContractModifyResponse {
         val contract = contractRepository.findByIdOrNull(request.contractId) ?: throw BusinessException(ResponseCode.NOT_FOUNT_CONTRACT)
         validateContractStatus(contract)
         contractCoverageService.addContractCoverage(request.addCoverageIds, contract.id, contract.productId)
@@ -78,7 +80,7 @@ class ContractService(
         updateContractStatus(request, contract)
         updateTotalAmount(contract)
 
-        return contract.id
+        return ContractModifyResponse.from(contract.id)
     }
 
     private fun validateContractStatus(

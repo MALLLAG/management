@@ -1,6 +1,7 @@
 package com.contract.management.domain.coverage.service
 
 import com.contract.management.domain.coverage.controller.request.CoverageSaveRequest
+import com.contract.management.domain.coverage.controller.response.CoverageSaveResponse
 import com.contract.management.domain.coverage.entity.Coverage
 import com.contract.management.domain.coverage.entity.calculateAmount
 import com.contract.management.domain.coverage.entity.isIncludedInProduct
@@ -19,11 +20,11 @@ class CoverageService(
 
     fun saveCoverage(
         request: CoverageSaveRequest
-    ): Long {
+    ): CoverageSaveResponse {
         validateDuplicateCoverage(request)
-
         val coverage = coverageRepository.save(Coverage.from(request))
-        return coverage.id
+
+        return CoverageSaveResponse.from(coverage.id)
     }
 
     private fun validateDuplicateCoverage(

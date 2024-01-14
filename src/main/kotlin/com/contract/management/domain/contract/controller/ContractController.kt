@@ -3,7 +3,9 @@ package com.contract.management.domain.contract.controller
 import com.contract.management.domain.contract.controller.request.ContractModifyRequest
 import com.contract.management.domain.contract.controller.request.ContractSaveRequest
 import com.contract.management.domain.contract.controller.response.AmountEstimateResponse
+import com.contract.management.domain.contract.controller.response.ContractModifyResponse
 import com.contract.management.domain.contract.controller.response.ContractResponse
+import com.contract.management.domain.contract.controller.response.ContractSaveResponse
 import com.contract.management.domain.contract.service.ContractService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -35,14 +37,14 @@ class ContractController(
     @PostMapping
     fun saveContract(
         @Valid @RequestBody request: ContractSaveRequest
-    ): ResponseEntity<Long> {
+    ): ResponseEntity<ContractSaveResponse> {
         return ResponseEntity(contractService.saveContract(request), HttpStatus.CREATED)
     }
 
     @PatchMapping
     fun modifyContract(
         @Valid @RequestBody request: ContractModifyRequest
-    ): ResponseEntity<Long> {
+    ): ResponseEntity<ContractModifyResponse> {
         return ResponseEntity(contractService.modifyContract(request), HttpStatus.OK)
     }
 }

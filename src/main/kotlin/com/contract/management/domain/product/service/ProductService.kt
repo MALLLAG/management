@@ -1,6 +1,7 @@
 package com.contract.management.domain.product.service
 
 import com.contract.management.domain.product.controller.request.ProductSaveRequest
+import com.contract.management.domain.product.controller.response.ProductSaveResponse
 import com.contract.management.domain.product.entity.Product
 import com.contract.management.domain.product.repository.ProductRepository
 import com.contract.management.global.exception.BusinessException
@@ -16,11 +17,11 @@ class ProductService(
 
     fun saveProduct(
         request: ProductSaveRequest
-    ): Long {
+    ): ProductSaveResponse {
         validateDuplicateProduct(request)
-
         val product = productRepository.save(Product.from(request))
-        return product.id
+
+        return ProductSaveResponse.from(product.id)
     }
 
     private fun validateDuplicateProduct(

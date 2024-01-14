@@ -1,6 +1,7 @@
 package com.contract.management.domain.product.controller
 
 import com.contract.management.domain.product.controller.request.ProductSaveRequest
+import com.contract.management.domain.product.controller.response.ProductSaveResponse
 import com.contract.management.domain.product.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -19,7 +20,7 @@ class ProductController(
     @PostMapping
     fun saveProduct(
         @Valid @RequestBody request: ProductSaveRequest
-    ): ResponseEntity<Long> {
+    ): ResponseEntity<ProductSaveResponse> {
         return ResponseEntity(productService.saveProduct(request), HttpStatus.CREATED)
     }
 }
