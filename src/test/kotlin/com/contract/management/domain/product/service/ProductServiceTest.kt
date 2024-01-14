@@ -23,15 +23,15 @@ class ProductServiceTest(
         @Test
         fun `중복된 상품이 있으면 예외를 던진다`() {
             // given
-            val request = ProductSaveRequest(
+            val productSaveRequest = ProductSaveRequest(
                 name = "테스트 보험",
                 contractPeriodMinimum = 1,
                 contractPeriodMaximum = 6
             )
-            productService.saveProduct(request)
+            productService.saveProduct(productSaveRequest)
 
             // when & then
-            assertThatThrownBy { productService.saveProduct(request) }
+            assertThatThrownBy { productService.saveProduct(productSaveRequest) }
                 .isExactlyInstanceOf(BusinessException::class.java)
                 .hasMessage(ResponseCode.DUPLICATE_PRODUCT.message)
         }
@@ -39,21 +39,21 @@ class ProductServiceTest(
         @Test
         fun `상품 저장에 성공한다`() {
             // given
-            val request = ProductSaveRequest(
+            val productSaveRequest = ProductSaveRequest(
                 name = "테스트 보험",
                 contractPeriodMinimum = 1,
                 contractPeriodMaximum = 6
             )
 
             // when
-            val productId = productService.saveProduct(request)
+            val productSaveResponse = productService.saveProduct(productSaveRequest)
 
             // then
-            val product = productRepository.findByIdOrNull(productId)!!
+            val product = productRepository.findByIdOrNull(productSaveResponse.productId)!!
 
-            assertThat(request.name).isEqualTo(product.name)
-            assertThat(request.contractPeriodMinimum).isEqualTo(product.contractPeriodMinimum)
-            assertThat(request.contractPeriodMaximum).isEqualTo(product.contractPeriodMaximum)
+            assertThat(productSaveRequest.name).isEqualTo(product.name)
+            assertThat(productSaveRequest.contractPeriodMinimum).isEqualTo(product.contractPeriodMinimum)
+            assertThat(productSaveRequest.contractPeriodMaximum).isEqualTo(product.contractPeriodMaximum)
         }
     }
 

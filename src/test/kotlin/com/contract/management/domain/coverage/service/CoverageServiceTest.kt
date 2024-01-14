@@ -47,16 +47,16 @@ class CoverageServiceTest(
         @Test
         fun `중복된 담보가 있으면 예외를 던진다`() {
             // given
-            val request = CoverageSaveRequest(
+            val coverageSaveRequest = CoverageSaveRequest(
                 productId = product.id,
                 name = "테스트 담보",
                 insuredAmount = BigDecimal("1000000"),
                 baseAmount = BigDecimal("100")
             )
-            coverageService.saveCoverage(request)
+            coverageService.saveCoverage(coverageSaveRequest)
 
             // when & then
-            assertThatThrownBy { coverageService.saveCoverage(request) }
+            assertThatThrownBy { coverageService.saveCoverage(coverageSaveRequest) }
                 .isExactlyInstanceOf(BusinessException::class.java)
                 .hasMessage(ResponseCode.DUPLICATE_COVERAGE.message)
         }
@@ -64,7 +64,7 @@ class CoverageServiceTest(
         @Test
         fun `담보 저장에 성공한다`() {
             // given
-            val request = CoverageSaveRequest(
+            val coverageSaveRequest = CoverageSaveRequest(
                 productId = product.id,
                 name = "테스트 담보",
                 insuredAmount = BigDecimal("1000000"),
@@ -72,14 +72,14 @@ class CoverageServiceTest(
             )
 
             // when
-            val coverageId = coverageService.saveCoverage(request)
+            val coverageSaveResponse = coverageService.saveCoverage(coverageSaveRequest)
 
             // then
-            val coverage = coverageRepository.findByIdOrNull(coverageId)!!
+            val coverage = coverageRepository.findByIdOrNull(coverageSaveResponse.coverageId)!!
             assertThat(product.id).isEqualTo(coverage.productId)
-            assertThat(request.name).isEqualTo(coverage.name)
-            assertThat(request.insuredAmount).isEqualTo(coverage.insuredAmount)
-            assertThat(request.baseAmount).isEqualTo(coverage.baseAmount)
+            assertThat(coverageSaveRequest.name).isEqualTo(coverage.name)
+            assertThat(coverageSaveRequest.insuredAmount).isEqualTo(coverage.insuredAmount)
+            assertThat(coverageSaveRequest.baseAmount).isEqualTo(coverage.baseAmount)
         }
     }
 

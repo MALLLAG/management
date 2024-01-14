@@ -55,20 +55,20 @@ class ContractServiceTest(
         @Test
         fun `계약 정보 조회에 성공한다`() {
             // given
-            val saveRequest = ContractSaveRequest(
+            val contractSaveRequest = ContractSaveRequest(
                 productId = product.id,
                 insuranceStartDate = LocalDate.now(),
                 insuranceEndDate = LocalDate.now().plusMonths(1),
                 coverageIds = listOf(coverage1.id)
             )
-            val contractId = contractService.saveContract(saveRequest)
+            val contractSaveResponse = contractService.saveContract(contractSaveRequest)
 
             // when
-            val contractResponse = contractService.getContract(contractId)
+            val contractResponse = contractService.getContract(contractSaveResponse.contractId)
 
             // then
             assertThat(product.name).isEqualTo(contractResponse.productName)
-            assertThat(saveRequest.calculatePeriod()).isEqualTo(contractResponse.contractPeriod)
+            assertThat(contractSaveRequest.calculatePeriod()).isEqualTo(contractResponse.contractPeriod)
             assertThat(coverage1.name).isEqualTo(contractResponse.coverages[0].coverageName)
             assertThat(contractResponse.coverages[0].baseAmount).isNotNull
             assertThat(contractResponse.coverages[0].insuredAmount).isNotNull
@@ -81,7 +81,7 @@ class ContractServiceTest(
         @Test
         fun `계약 정보 저장에 성공한다`() {
             // given
-            val request = ContractSaveRequest(
+            val contractSaveRequest = ContractSaveRequest(
                 productId = product.id,
                 insuranceStartDate = LocalDate.now(),
                 insuranceEndDate = LocalDate.now().plusMonths(1),
@@ -89,21 +89,21 @@ class ContractServiceTest(
             )
 
             // when
-            val contractId = contractService.saveContract(request)
+            val contractSaveResponse = contractService.saveContract(contractSaveRequest)
 
             // then
-            val contract = contractRepository.findByIdOrNull(contractId)!!
-            val contractCoverages = contractCoverageRepository.findByContractId(contractId)
+            val contract = contractRepository.findByIdOrNull(contractSaveResponse.contractId)!!
+            val contractCoverages = contractCoverageRepository.findByContractId(contractSaveResponse.contractId)
             val coverages = contractCoverages.map {
                 coverageRepository.findByIdOrNull(it.coverageId)
                     ?: throw BusinessException(ResponseCode.NOT_FOUND_COVERAGE)
             }
 
-            assertThat(request.productId).isEqualTo(contract.productId)
-            assertThat(request.calculatePeriod()).isEqualTo(contract.calculatePeriod())
-            assertThat(request.insuranceStartDate).isEqualTo(contract.insuranceStartDate)
-            assertThat(request.insuranceEndDate).isEqualTo(contract.insuranceEndDate)
-            assertThat(request.coverageIds).contains(coverages[0].id)
+            assertThat(contractSaveRequest.productId).isEqualTo(contract.productId)
+            assertThat(contractSaveRequest.calculatePeriod()).isEqualTo(contract.calculatePeriod())
+            assertThat(contractSaveRequest.insuranceStartDate).isEqualTo(contract.insuranceStartDate)
+            assertThat(contractSaveRequest.insuranceEndDate).isEqualTo(contract.insuranceEndDate)
+            assertThat(contractSaveRequest.coverageIds).contains(coverages[0].id)
         }
     }
 
@@ -113,16 +113,16 @@ class ContractServiceTest(
         @Test
         fun `담보, 계약기간, 계약상태, 보험료 정보를 수정한다`() {
             // given
-            val saveRequest = ContractSaveRequest(
+            val contractSaveRequest = ContractSaveRequest(
                 productId = product.id,
                 insuranceStartDate = LocalDate.now(),
                 insuranceEndDate = LocalDate.now().plusMonths(1),
                 coverageIds = listOf(coverage1.id)
             )
-            val contractId = contractService.saveContract(saveRequest)
+            val contractSaveResponse = contractService.saveContract(contractSaveRequest)
 
             val modifyRequest = ContractModifyRequest(
-                contractId = contractId,
+                contractId = contractSaveResponse.contractId,
                 addCoverageIds = listOf(coverage2.id),
                 deleteCoverageIds = listOf(coverage1.id),
                 insuranceEndDate = LocalDate.of(2024, 4, 1),
@@ -133,7 +133,7 @@ class ContractServiceTest(
             contractService.modifyContract(modifyRequest)
 
             // then
-            val contract = contractRepository.findByIdOrNull(contractId)!!
+            val contract = contractRepository.findByIdOrNull(contractSaveResponse.contractId)!!
             val contractCoverages = contractCoverageRepository.findByContractId(contract.id)
             val coverageIds = contractCoverages.map { it.coverageId }
             val calculateAmount = coverageService.calculateAmount(contract.productId, contract.calculatePeriod(), coverageIds)
@@ -147,16 +147,16 @@ class ContractServiceTest(
         @Test
         fun `계약 상태가 만료 상태이면 예외를 던진다`() {
             // given
-            val saveRequest = ContractSaveRequest(
+            val contractSaveRequest = ContractSaveRequest(
                 productId = product.id,
                 insuranceStartDate = LocalDate.now(),
                 insuranceEndDate = LocalDate.now().plusMonths(1),
                 coverageIds = listOf(coverage1.id)
             )
-            val contractId = contractService.saveContract(saveRequest)
+            val contractSaveResponse = contractService.saveContract(contractSaveRequest)
 
             val modifyRequest = ContractModifyRequest(
-                contractId = contractId,
+                contractId = contractSaveResponse.contractId,
                 addCoverageIds = listOf(coverage2.id),
                 deleteCoverageIds = listOf(coverage1.id),
                 insuranceEndDate = LocalDate.of(2024, 4, 1),
@@ -164,7 +164,7 @@ class ContractServiceTest(
             )
 
             // when & then
-            val contract = contractRepository.findByIdOrNull(contractId)!!
+            val contract = contractRepository.findByIdOrNull(contractSaveResponse.contractId)!!
             contract.updateStatus(ContractStatus.EXPIRED)
 
             assertThatThrownBy { contractService.modifyContract(modifyRequest) }
@@ -175,16 +175,16 @@ class ContractServiceTest(
         @Test
         fun `수정 계약 날짜가 금월보다 작거나 같으면 예외를 던진다`() {
             // given
-            val saveRequest = ContractSaveRequest(
+            val contractSaveRequest = ContractSaveRequest(
                 productId = product.id,
                 insuranceStartDate = LocalDate.now(),
                 insuranceEndDate = LocalDate.now().plusMonths(1),
                 coverageIds = listOf(coverage1.id)
             )
-            val contractId = contractService.saveContract(saveRequest)
+            val contractSaveResponse = contractService.saveContract(contractSaveRequest)
 
             val modifyRequest = ContractModifyRequest(
-                contractId = contractId,
+                contractId = contractSaveResponse.contractId,
                 addCoverageIds = listOf(coverage2.id),
                 deleteCoverageIds = listOf(coverage1.id),
                 insuranceEndDate = LocalDate.now().minusMonths(2),
@@ -205,13 +205,13 @@ class ContractServiceTest(
         fun `계약 만기가 일주일 남은 계약들을 조회한다`() {
             // given
             val today = LocalDate.now()
-            val saveRequest = ContractSaveRequest(
+            val contractSaveRequest = ContractSaveRequest(
                 productId = product.id,
                 insuranceStartDate = today.minusMonths(1).plusDays(7),
                 insuranceEndDate = today.plusDays(7),
                 coverageIds = listOf(coverage1.id)
             )
-            contractService.saveContract(saveRequest)
+            contractService.saveContract(contractSaveRequest)
 
             // when
             val contracts = contractService.findExpiringContractsOneWeekBefore()
