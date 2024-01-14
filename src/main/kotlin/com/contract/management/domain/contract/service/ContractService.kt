@@ -122,6 +122,7 @@ class ContractService(
         contract.updateTotalAmount(calculateAmount)
     }
 
+    @Transactional(readOnly = true)
     fun findExpiringContractsOneWeekBefore(): List<Contract> = contractRepository.findExpiringContractsOneWeekBefore()
 
 }
