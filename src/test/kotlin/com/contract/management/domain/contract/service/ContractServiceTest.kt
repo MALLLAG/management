@@ -69,6 +69,9 @@ class ContractServiceTest(
             // then
             assertThat(product.name).isEqualTo(contractResponse.productName)
             assertThat(contractSaveRequest.calculatePeriod()).isEqualTo(contractResponse.contractPeriod)
+            assertThat(contractSaveRequest.insuranceStartDate).isEqualTo(contractResponse.insuranceStartDate)
+            assertThat(contractSaveRequest.insuranceEndDate).isEqualTo(contractResponse.insuranceEndDate)
+            assertThat(ContractStatus.NORMAL).isEqualTo(contractResponse.contractStatus)
             assertThat(coverage1.name).isEqualTo(contractResponse.coverages[0].coverageName)
             assertThat(contractResponse.coverages[0].baseAmount).isNotNull
             assertThat(contractResponse.coverages[0].insuredAmount).isNotNull
