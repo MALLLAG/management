@@ -122,6 +122,16 @@ contractPeriodMaximum: 계약 최대 기간
 
 - **Status Code:** 201
 
+```json
+{
+    "productId": 3
+}
+```
+
+```
+productId: 상품 번호
+```
+
 <br>
 <br>
 <br>
@@ -158,6 +168,16 @@ baseAmount: 기준 금액
 
 - **Status Code:** 201
 
+```json
+{
+    "coverageId": 5
+}
+```
+
+```
+coverageId: 담보 번호
+```
+
 <br>
 <br>
 <br>
@@ -192,6 +212,16 @@ insuranceEndDate: 계약 종료일
 ### Response
 
 - **Status Code:** 201
+
+```json
+{
+    "contractId": 1
+}
+```
+
+```
+contractId: 계약 번호
+```
 
 ## 계약 조회
 
@@ -259,6 +289,15 @@ contractStatus: 수정하려는 계약 상태
 
 - **Status Code:** 200
 
+```json
+{
+    "contractId": 1
+}
+```
+
+```
+contractId: 계약 번호
+```
 
 
 ## 예상 총 보험료 계산
