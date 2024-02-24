@@ -354,7 +354,7 @@ estimateAmount: 예상 보험료
     fun findExpiringContractsOneWeekBefore(): List<Contract>
 ```
 
-계약 만료일이 7일 남은 계약들을 조회하여, 안내장을 발송합니다. *(시스템 출력으로 대체하였습니다.)*
+계약 만료일이 7일 남은 계약들을 조회하여, 안내장을 발송합니다.
 
 
 
